@@ -1,2 +1,2 @@
 # Snake-RL-env
-A reinforcement learning envirnment for Snake written in python3.
+A reinforcement learning environment for Snake written in python3.
