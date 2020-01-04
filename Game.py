@@ -95,17 +95,15 @@ class Game:
                 return
 
         board = np.zeros((self.s.game_x, self.s.game_y, 3), dtype=np.uint8)
-        food_color = (0, 255, 0)
+        food_color = (0, 0, 255)
         snake_color = (255, 175, 0)
 
         #loop over snake rendering whole body
         for i in range(len(self.snake.body)):
             board[self.snake.body[i][0]][self.snake.body[i][1]] = snake_color
 
-        #board[self.snake.x][self.snake.y] = snake_color
         board[self.food[0]][self.food[1]] = food_color
 
         img = Image.fromarray(board, "RGB")
         img = img.resize((300,300))
-        cv2.imshow("image", np.array(img))
-
+        cv2.imshow("Snake", np.array(img))

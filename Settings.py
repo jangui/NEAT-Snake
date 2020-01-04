@@ -1,8 +1,8 @@
 class Settings:
     def __init__(self):
         ###game dimensions
-        self.game_x = 20
-        self.game_y = 20
+        self.game_x = 10
+        self.game_y = 10
 
         ###rewards
         #collect food
