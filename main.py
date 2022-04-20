@@ -3,8 +3,9 @@ import random
 from Game import Game
 import time
 
-env = Game()
-num_actions = env.num_actions
+dimensions = (10, 10)
+env = Game(dimensions)
+num_actions = 4
 
 episodes = 20
 render_period = 1
@@ -14,16 +15,19 @@ for episode in range(episodes):
     state = env.reset()
 
     while not env.done:
-        action = random.randint(0, num_actions)
-        new_state, reward = env.step(action)
+        # render
         if render and (episode % render_period == 0):
             env.render()
-            #time.sleep(0.1) #helps view game at normal speed
+            time.sleep(0.1) #helps view game at normal speed
 
+        # get action
+        #action = random.randint(0, num_actions-1)
+        action = int(input("action: "))
+
+        # preform action and get new state and rewards
+        new_state = env.step(action)
+
+
+        # update state for next loop
         state = new_state
 
-"""
-state is a tuple containing the coordinates
-of the snake's body and the coordinates of
-the food's location
-"""
