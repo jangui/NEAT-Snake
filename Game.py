@@ -82,7 +82,6 @@ class Game:
 
         if not valid_move:
             self.done = True
-            print(f'Game Over! Points: {self.points}')
 
         return self.board
 
@@ -129,8 +128,6 @@ class Game:
         else:
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 return
-
-        print(self.board)
 
         board = np.zeros((self.dimensions[0], self.dimensions[1], 3), dtype=np.uint8)
         food_color = (0, 0, 255)
