@@ -9,11 +9,15 @@ class Game:
 
     def __init__(self, game_dimensions: (int, int)):
         """ init for snake game """
-        self.background_color = (255,255,255)
+        self.background_color = (0,0,0)
         self.game_dimensions = game_dimensions
-        self.done = False
-        self.food_color = (0,0,255)
-        self.snake_color = (255,0,0)
+        self.food_color = (220,0,0)
+        self.snake_color = (0,250,0)
+        self.snake_head_color = (25, 200, 25)
+        self.border_color = (0,255,0)
+        self.border_width = 2
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.font_color = (220, 0, 0)
         self.reset()
 
     def reset(self):
@@ -34,7 +38,6 @@ class Game:
 
         # check wall collisions
         direction = self.snake.direction
-        print(direction)
         match direction:
             case Direction.LEFT:
                 snake_head_x -= 1
@@ -69,7 +72,6 @@ class Game:
         ate_food = False
         if head_position == 1:
             ate_food = True
-            self.place_food()
             self.points += 1
 
         # move snake
@@ -81,6 +83,7 @@ class Game:
         # move snake tail
         if ate_food:
             self.board[snake_tail_y][snake_tail_x] = -1
+            self.place_food()
         else:
             self.board[snake_tail_y][snake_tail_x] = 0
 
@@ -122,18 +125,63 @@ class Game:
         # fill background
         screen.fill(self.background_color)
 
+        # displaying parameters
+        row_width =  (screen_width // rows) * 0.8
+        col_width = (screen_height // cols) * 0.8
+        x_margin = screen_width * 0.14
+        y_margin = screen_height * 0.14
+        screen_width = screen_width - x_margin * 2
+        screen_height = screen_height - y_margin * 2
+
+        # draw points to screen
+        text = self.font.render(f'Points: {self.points}', True, self.font_color)
+        textRect = text.get_rect()
+        textRect.center = (textRect.width, textRect.height)
+        screen.blit(text, textRect)
+
         # draw appropriate object in each game cell
         for row in range(rows):
-            row_width = screen_width // rows
-            x = row_width * row
+            y = (row_width * row) + y_margin
             for col in range(cols):
-                col_width = screen_height // cols
-                y = col_width * col
+                x = (col_width * col) + x_margin
 
                 # draw object for current cell
-                current_cell = self.board[col][row]
-                if current_cell == -1:
-                    pygame.draw.circle(screen, self.snake.color, (x, y), row_width)
-                elif current_cell == 1:
-                    pygame.draw.circle(screen, self.food_color, (x, y), row_width)
+                current_cell = self.board[row][col]
+                if current_cell == -1: # draw snake
+                    snake_radius_size = col_width // 4
+                    snake_head_x, snake_head_y = self.snake.body[0]
+                    snake_color = self.snake_color
+                    if snake_head_x == col and snake_head_y == row:
+                        snake_radius_size *= 1.3
+                        snake_color = self.snake_head_color
+                    pygame.draw.circle(screen, snake_color, (x, y), snake_radius_size)
 
+                elif current_cell == 1: # draw food
+                    food_radius_size = col_width // 2.5
+                    pygame.draw.circle(screen, self.food_color, (x, y), food_radius_size)
+
+                # draw border
+                if col == 0:
+                    x1 = (x - col_width // 2) - self.border_width // 2
+                    x2 = (x - col_width // 2) - self.border_width // 2
+                    y1 = y - row_width // 2
+                    y2 = y + row_width // 2
+                    pygame.draw.line(screen, self.border_color, (x1, y1), (x2, y2), self.border_width)
+                elif col == self.game_dimensions[1]-1:
+                    x1 = x + col_width // 2
+                    x2 = x + col_width // 2
+                    y1 = y - row_width // 2
+                    y2 = y + row_width // 2
+                    pygame.draw.line(screen, self.border_color, (x1, y1), (x2, y2), self.border_width)
+                if row == 0:
+                    x1 = x - col_width // 2
+                    x2 = x + col_width // 2
+                    y1 = y - row_width // 2
+                    y2 = y - row_width // 2
+                    pygame.draw.line(screen, self.border_color, (x1, y1), (x2, y2), self.border_width)
+                elif row == self.game_dimensions[0]-1:
+                    x1 = x - col_width // 2
+                    x2 = x + col_width // 2
+                    y1 = y + row_width // 2
+                    y2 = y + row_width // 2
+                    pygame.draw.line(screen, self.border_color, (x1, y1), (x2, y2), self.border_width)

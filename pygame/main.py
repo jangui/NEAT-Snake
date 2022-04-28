@@ -7,7 +7,9 @@ def main():
     # init pygame
     pygame.init()
 
-    screen_dimensions = (500, 500)
+    font = pygame.font.Font('freesansbold.ttf', 32)
+
+    screen_dimensions = (750, 750)
     main_screen = pygame.display.set_mode(screen_dimensions)
 
     game_dimensions = (10, 10)
@@ -39,6 +41,14 @@ def main():
         # render to screen
         game.render(main_screen)
 
+        # draw points to screen
+        font_color = (220, 0, 0)
+        text = font.render(f'Points: {game.points}', True, font_color, game.background_color)
+        textRect = text.get_rect()
+        textRect.center = (textRect.width, textRect.height)
+        main_screen.blit(text, textRect)
+        pygame.draw.rect(main_screen, (255,255,255), textRect)
+
         # update display
         pygame.display.flip()
 
@@ -47,7 +57,6 @@ def main():
         # check if game over
         if game.done:
             game.reset()
-            running = False
 
     pygame.quit()
 
